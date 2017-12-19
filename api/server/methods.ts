@@ -36,6 +36,7 @@ Meteor.methods({
       messageId: Messages.collection.insert({
         chatId: chatId,
         content: content,
+        senderId: this.userId,
         createdAt: new Date(),
         type: type
       })

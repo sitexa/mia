@@ -1,3 +1,5 @@
+export const DEFAULT_PICTURE_URL = '/assets/default-profile-pic.svg';
+
 export enum MessageType {
   TEXT = <any>'text'
 }
@@ -17,6 +19,7 @@ export interface Chat {
 export interface Message {
   _id?: string;
   chatId?: string;
+  senderId?: string;
   content?: string;
   createdAt?: Date;
   type?: MessageType;
