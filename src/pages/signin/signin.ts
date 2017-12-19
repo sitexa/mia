@@ -8,9 +8,9 @@ import { MainPage } from '../pages';
 @IonicPage()
 @Component({
   selector: 'page-login',
-  templateUrl: 'login.html'
+  templateUrl: 'signin.html'
 })
-export class LoginPage {
+export class SigninPage {
   // The account fields for the login form.
   // If you're using the username field with or without email, make
   // sure to add it to the type
