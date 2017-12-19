@@ -4,14 +4,14 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Config, Nav, Platform } from 'ionic-angular';
 
-import { FirstRunPage } from '../pages/pages';
+import { FirstRunPage, MainPage } from '../pages/pages';
 import { Settings } from '../providers/providers';
 
 @Component({
   templateUrl: "app.html"
 })
 export class MyApp {
-  rootPage = FirstRunPage;
+  rootPage:any;
 
   @ViewChild(Nav) nav: Nav;
 
@@ -21,7 +21,7 @@ export class MyApp {
     { title: 'Tabs', component: 'TabsPage' },
     { title: 'Cards', component: 'CardsPage' },
     { title: 'Content', component: 'ContentPage' },
-    { title: 'Login', component: 'LoginPage' },
+    { title: 'Signin', component: 'SigninPage' },
     { title: 'Signup', component: 'SignupPage' },
     { title: 'Master Detail', component: 'ListMasterPage' },
     { title: 'Menu', component: 'MenuPage' },
@@ -37,10 +37,13 @@ export class MyApp {
               private statusBar: StatusBar,
               private splashScreen: SplashScreen) {
     platform.ready().then(() => {
+      this.rootPage = Meteor.user() ? MainPage : FirstRunPage;
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
+      if (platform.is('cordova')) {
+        statusBar.styleDefault();
+        splashScreen.hide();
+      }
     });
     this.initTranslate();
   }
