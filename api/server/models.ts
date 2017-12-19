@@ -2,6 +2,11 @@ export enum MessageType {
   TEXT = <any>'text'
 }
 
+export interface Profile {
+  name?: string;
+  picture?: string;
+}
+
 export interface Chat {
   _id?: string;
   title?: string;
