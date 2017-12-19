@@ -1,9 +1,9 @@
 <ion-header>
   <ion-navbar color="whatsapp">
-    <ion-title>Login</ion-title>
+    <ion-title>Register</ion-title>
 
     <ion-buttons end>
-      <button ion-button class="done-button" (click)="login()">Done</button>
+      <button ion-button class="done-button" (click)="register()">Done</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -21,8 +21,5 @@
 
   <ion-item>
     <ion-input [(ngModel)]="phone" (keypress)="onInputKeypress($event)" type="tel" placeholder="Your phone number"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-input [(ngModel)]="password" (keypress)="onInputKeypress($event)" type="password" placeholder="Your password"></ion-input>
   </ion-item>
 </ion-content>

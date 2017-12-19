@@ -27,4 +27,8 @@ export class WelcomePage {
   login(){
     this.navCtrl.push("LoginPage");
   }
+
+  register(){
+    this.navCtrl.push('RegisterPage');
+  }
 }

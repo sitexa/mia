@@ -16,13 +16,35 @@ export class PhoneService {
     });
   }
 
-  login(phoneNumber: string, code: string): Promise<void> {
+  login(phoneNumber: string, code: string,password: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      Accounts.verifyPhone(phoneNumber, code, (e: Error) => {
+      Accounts.verifyPhone(phoneNumber, code, password,(e: Error) => {
         if (e) {
           return reject(e);
         }
 
+        resolve();
+      });
+    });
+  }
+
+  createUser(options: Object): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      Accounts.createUserWithPhone(options, (e: Error) => {
+        if (e) {
+          return reject(e);
+        }
+        resolve();
+      });
+    });
+  }
+
+  loginUser(phone: string, password: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      Meteor.loginWithPhoneAndPassword({phone: phone}, password, (e: Error) => {
+        if (e) {
+          return reject(e);
+        }
         resolve();
       });
     });

@@ -1,16 +1,14 @@
 import { Component } from '@angular/core';
 import { Alert, AlertController, IonicPage, NavController } from 'ionic-angular';
 import { PhoneService } from '../../providers/providers';
-import { MainPage } from "../pages";
 
 @IonicPage()
 @Component({
-  selector: 'login',
-  templateUrl: 'login.html'
+  selector: 'register',
+  templateUrl: 'register.html'
 })
-export class LoginPage {
+export class RegisterPage {
   private phone = '';
-  private password = '';
 
   constructor(private alertCtrl: AlertController,
               private phoneService: PhoneService,
@@ -19,20 +17,12 @@ export class LoginPage {
 
   onInputKeypress({keyCode}: KeyboardEvent): void {
     if (keyCode === 13) {
-      this.login();
+      this.register();
     }
   }
 
-  login(phone: string = this.phone): void {
-
-    this.phoneService.loginUser("+86" + this.phone, this.password)
-      .then(() => {
-        this.navCtrl.push(MainPage);
-      }).catch((e) => {
-      this.handleError(e);
-    })
-
-    /*const alert = this.alertCtrl.create({
+  register(phone: string = this.phone): void {
+    const alert = this.alertCtrl.create({
       title: 'Confirm',
       message: `Would you like to proceed with the phone number ${phone}?`,
       buttons: [
@@ -43,17 +33,17 @@ export class LoginPage {
         {
           text: 'Yes',
           handler: () => {
-            this.handleLogin(alert);
+            this.handleRegister(alert);
             return false;
           }
         }
       ]
     });
 
-    alert.present();*/
+    alert.present();
   }
 
-  handleLogin(alert: Alert): void {
+  handleRegister(alert: Alert): void {
     alert.dismiss().then(() => {
       return this.phoneService.verify("+86" + this.phone);
     })
