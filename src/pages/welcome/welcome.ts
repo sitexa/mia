@@ -16,11 +16,15 @@ export class WelcomePage {
 
   constructor(public navCtrl: NavController) { }
 
-  login() {
+  signin() {
     this.navCtrl.push('SigninPage');
   }
 
   signup() {
     this.navCtrl.push('SignupPage');
+  }
+
+  login(){
+    this.navCtrl.push("LoginPage");
   }
 }

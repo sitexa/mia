@@ -33,7 +33,7 @@ export class SigninPage {
   }
 
   // Attempt to login in through our User service
-  doLogin() {
+  doSignin() {
     this.user.login(this.account).subscribe((resp) => {
       this.navCtrl.push(MainPage);
     }, (err) => {
