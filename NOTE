@@ -1,0 +1,12 @@
+2017-12-18,monday
+(1)serve side:
+api$ meteor add accounts-base
+api$ meteor add npm-bcrypt
+api$ meteor add mys:accounts-phone
+add api/server/private/settings.json
+
+(2)client side:
+npm install --save-dev @types/meteor-accounts-phone
+
+(3)server side:
+api/server/main.ts:
