@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Profile } from 'api/models';
 import { AlertController, IonicPage, NavController } from 'ionic-angular';
 import { MeteorObservable } from 'meteor-rxjs';
+import { MainPage } from "../pages";
 
 @IonicPage()
 @Component({
@@ -12,10 +13,9 @@ export class ProfilePage implements OnInit {
   picture: string;
   profile: Profile;
 
-  constructor(
-    private alertCtrl: AlertController,
-    private navCtrl: NavController
-  ) {}
+  constructor(private alertCtrl: AlertController,
+              private navCtrl: NavController) {
+  }
 
   ngOnInit(): void {
     this.profile = Meteor.user().profile || {
@@ -26,7 +26,7 @@ export class ProfilePage implements OnInit {
   updateProfile(): void {
     MeteorObservable.call('updateProfile', this.profile).subscribe({
       next: () => {
-        this.navCtrl.push('MainPage');
+        this.navCtrl.push(MainPage);
       },
       error: (e: Error) => {
         this.handleError(e);
