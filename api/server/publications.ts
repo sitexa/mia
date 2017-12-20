@@ -2,21 +2,32 @@ import { Chat, Message, User } from './models';
 import { Chats, Messages, Users } from './collections';
 import { publishComposite } from 'meteor/reywood:publish-composite';
 
-Meteor.publish('users', function (): Mongo.Cursor<User> {
-  if (!this.userId) {
-    return;
-  }
-
-  return Users.collection.find({}, {
-    fields: {
-      profile: 1
+publishComposite('users',
+  function (pattern: string): PublishCompositeConfig<User> {
+    if (!this.userId) {
+      return;
     }
+
+    let selector = {};
+
+    if (pattern) {
+      selector = {
+        'profile.name': {$regex: pattern, $options: 'i'}
+      };
+    }
+
+    return {
+      find: () => {
+        return Users.collection.find(selector, {
+          fields: {profile: 1},
+          limit: 15
+        });
+      }
+    };
   });
-});
 
 Meteor.publish('messages',
-  function (chatId: string,
-            messagesBatchCounter: number): Mongo.Cursor<Message> {
+  function (chatId: string, messagesBatchCounter: number): Mongo.Cursor<Message> {
     if (!this.userId || !chatId) {
       return;
     }
