@@ -1,0 +1,8 @@
+{
+  "runtime": {
+    "DDP_DEFAULT_CONNECTION_URL": "http://192.168.2.104:3000"
+  },
+  "import": [
+
+  ]
+}

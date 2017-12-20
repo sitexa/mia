@@ -1,6 +1,6 @@
 {
   "name": "MIA",
-  "app_id": "",
+  "app_id": "com.sitexa.mia",
   "type": "ionic-angular",
   "integrations": {
     "cordova": {}
