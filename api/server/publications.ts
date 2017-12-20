@@ -2,7 +2,7 @@ import { Chat, Message, User } from './models';
 import { Chats, Messages, Users } from './collections';
 import { publishComposite } from 'meteor/reywood:publish-composite';
 
-Meteor.publish('users', function(): Mongo.Cursor<User> {
+Meteor.publish('users', function (): Mongo.Cursor<User> {
   if (!this.userId) {
     return;
   }
@@ -14,33 +14,36 @@ Meteor.publish('users', function(): Mongo.Cursor<User> {
   });
 });
 
-Meteor.publish('messages', function(chatId: string): Mongo.Cursor<Message> {
-  if (!this.userId || !chatId) {
-    return;
-  }
+Meteor.publish('messages',
+  function (chatId: string,
+            messagesBatchCounter: number): Mongo.Cursor<Message> {
+    if (!this.userId || !chatId) {
+      return;
+    }
 
-  return Messages.collection.find({
-    chatId
-  }, {
-    sort: { createdAt: -1 }
+    return Messages.collection.find({
+      chatId
+    }, {
+      sort: {createdAt: -1},
+      limit: 30 * messagesBatchCounter
+    });
   });
-});
 
-publishComposite('chats', function(): PublishCompositeConfig<Chat> {
+publishComposite('chats', function (): PublishCompositeConfig<Chat> {
   if (!this.userId) {
     return;
   }
 
   return {
     find: () => {
-      return Chats.collection.find({ memberIds: this.userId });
+      return Chats.collection.find({memberIds: this.userId});
     },
 
     children: [
       <PublishCompositeConfig1<Chat, Message>> {
         find: (chat) => {
-          return Messages.collection.find({ chatId: chat._id }, {
-            sort: { createdAt: -1 },
+          return Messages.collection.find({chatId: chat._id}, {
+            sort: {createdAt: -1},
             limit: 1
           });
         }
@@ -48,9 +51,9 @@ publishComposite('chats', function(): PublishCompositeConfig<Chat> {
       <PublishCompositeConfig1<Chat, User>> {
         find: (chat) => {
           return Users.collection.find({
-            _id: { $in: chat.memberIds }
+            _id: {$in: chat.memberIds}
           }, {
-            fields: { profile: 1 }
+            fields: {profile: 1}
           });
         }
       }
