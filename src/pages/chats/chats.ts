@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from "rxjs";
-import { App, PopoverController, IonicPage, NavController } from "ionic-angular";
-import { Chats, Messages } from "api/collections";
-import { Chat } from "api/models";
+import { App, PopoverController, IonicPage, NavController, ModalController,AlertController } from "ionic-angular";
+import { Chats, Messages, Users } from "api/collections";
+import { Chat, Message } from "api/models";
+import { NewChatComponent } from './new-chat';
+import { Subscriber } from "rxjs/Subscriber";
+import { MeteorObservable } from "meteor-rxjs";
 
 @IonicPage()
 @Component({
@@ -10,28 +13,81 @@ import { Chat } from "api/models";
 })
 export class ChatsPage implements OnInit {
   chats;
+  senderId: string;
 
   constructor(private appCtrl: App,
               private navCtrl: NavController,
-              private popoverCtrl: PopoverController) {
+              private popoverCtrl: PopoverController,
+              private modalCtrl: ModalController,
+              private alertCtrl:AlertController) {
+    this.senderId = Meteor.userId();
+  }
+
+  addChat(): void {
+    const modal = this.modalCtrl.create('NewChatComponent');
+    modal.present();
   }
 
   ngOnInit() {
-    this.chats = Chats
-      .find({})
-      .mergeMap((chats: Chat[]) =>
-        Observable.combineLatest(
-          chats.map((chat: Chat) =>
-            Messages
-              .find({chatId: chat._id})
-              .startWith(null)
-              .map(messages => {
-                if (messages) chat.lastMessage = messages[0];
-                return chat;
-              })
-          )
-        )
-      ).zone();
+    MeteorObservable.subscribe('chats').subscribe(() => {
+      MeteorObservable.autorun().subscribe(() => {
+        this.chats = this.findChats();
+      });
+    });
+  }
+
+  findChats(): any {
+    // Find chats and transform them
+    return Chats.find().map(chats => {
+      chats.forEach(chat => {
+        chat.title = '';
+        chat.picture = '';
+
+        const receiverId = chat.memberIds.find(memberId => memberId !== this.senderId);
+        const receiver = Users.findOne(receiverId);
+
+        if (receiver) {
+          chat.title = receiver.profile.name;
+          chat.picture = receiver.profile.picture;
+        }
+
+        // This will make the last message reactive
+        this.findLastChatMessage(chat._id).subscribe((message) => {
+          chat.lastMessage = message;
+        });
+      });
+
+      return chats;
+    });
+  }
+
+  findLastChatMessage(chatId: string): Observable<Message> {
+    return Observable.create((observer: Subscriber<Message>) => {
+      const chatExists = () => !!Chats.findOne(chatId);
+
+      // Re-compute until chat is removed
+      MeteorObservable.autorun().takeWhile(chatExists).subscribe(() => {
+        Messages.find({ chatId }, {
+          sort: { createdAt: -1 }
+        }).subscribe({
+          next: (messages) => {
+            // Invoke subscription with the last message found
+            if (!messages.length) {
+              return;
+            }
+
+            const lastMessage = messages[0];
+            observer.next(lastMessage);
+          },
+          error: (e) => {
+            observer.error(e);
+          },
+          complete: () => {
+            observer.complete();
+          }
+        });
+      });
+    });
   }
 
   //todo 为什么在options中打开editProfile之后，showMessages就打不开了呢？
@@ -42,8 +98,25 @@ export class ChatsPage implements OnInit {
   }
 
   removeChat(chat: Chat): void {
-    Chats.remove({_id: chat._id}).subscribe(() => {
+    MeteorObservable.call('removeChat', chat._id).subscribe({
+      error: (e: Error) => {
+        if (e) {
+          this.handleError(e);
+        }
+      }
     });
+  }
+
+  handleError(e: Error): void {
+    console.error(e);
+
+    const alert = this.alertCtrl.create({
+      buttons: ['OK'],
+      message: e.message,
+      title: 'Oops!'
+    });
+
+    alert.present();
   }
 
   showOptions(): void {

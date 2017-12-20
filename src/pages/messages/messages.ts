@@ -1,10 +1,12 @@
 import { Component, OnInit, OnDestroy, ElementRef } from '@angular/core';
-import { IonicPage, NavParams } from 'ionic-angular';
+import { IonicPage, NavParams, PopoverController } from 'ionic-angular';
 import { Chat, Message, MessageType } from 'api/models';
 import { Messages } from 'api/collections';
 import { MeteorObservable } from 'meteor-rxjs';
 import * as moment from 'moment';
 import * as _ from 'lodash';
+import { MessagesOptionsComponent } from './messages-options';
+import { Subscription } from 'rxjs';
 
 @IonicPage()
 @Component({
@@ -20,10 +22,12 @@ export class MessagesPage implements OnInit, OnDestroy {
   autoScroller: MutationObserver;
   scrollOffset = 0;
   senderId: string;
+  loadingMessages: boolean;
+  messagesComputation: Subscription;
 
   constructor(navParams: NavParams,
-              private el: ElementRef
-  ) {
+              private el: ElementRef,
+              private popoverCtrl: PopoverController) {
     this.selectedChat = <Chat>navParams.get('chat');
     this.title = this.selectedChat.title;
     this.picture = this.selectedChat.picture;
@@ -51,9 +55,42 @@ export class MessagesPage implements OnInit, OnDestroy {
     this.autoScroller.disconnect();
   }
 
-  subscribeMessages() {
+  // Subscribes to the relevant set of messages
+  subscribeMessages(): void {
+    // A flag which indicates if there's a subscription in process
+    this.loadingMessages = true;
+    // A custom offset to be used to re-adjust the scrolling position once
+    // new dataset is fetched
     this.scrollOffset = this.scroller.scrollHeight;
-    this.messagesDayGroups = this.findMessagesDayGroups();
+
+    MeteorObservable.subscribe('messages',
+      this.selectedChat._id
+    ).subscribe(() => {
+      // Keep tracking changes in the dataset and re-render the view
+      if (!this.messagesComputation) {
+        this.messagesComputation = this.autorunMessages();
+      }
+
+      // Allow incoming subscription requests
+      this.loadingMessages = false;
+    });
+  }
+
+  // Detects changes in the messages dataset and re-renders the view
+  autorunMessages(): Subscription {
+    return MeteorObservable.autorun().subscribe(() => {
+      this.messagesDayGroups = this.findMessagesDayGroups();
+    });
+  }
+
+  showOptions(): void {
+    const popover = this.popoverCtrl.create('MessagesOptionsComponent', {
+      chat: this.selectedChat
+    }, {
+      cssClass: 'options-popover messages-options-popover'
+    });
+
+    popover.present();
   }
 
   findMessagesDayGroups() {
@@ -62,7 +99,7 @@ export class MessagesPage implements OnInit, OnDestroy {
     return Messages.find({
       chatId: this.selectedChat._id
     }, {
-      sort: { createdAt: 1 }
+      sort: {createdAt: 1}
     })
       .map((messages: Message[]) => {
         const format = 'D MMMM Y';
@@ -104,13 +141,17 @@ export class MessagesPage implements OnInit, OnDestroy {
   }
 
   scrollDown(): void {
+    // Don't scroll down if messages subscription is being loaded
+    if (this.loadingMessages) {
+      return;
+    }
     // Scroll down and apply specified offset
     this.scroller.scrollTop = this.scroller.scrollHeight - this.scrollOffset;
     // Zero offset for next invocation
     this.scrollOffset = 0;
   }
 
-  onInputKeypress({ keyCode }: KeyboardEvent): void {
+  onInputKeypress({keyCode}: KeyboardEvent): void {
     if (keyCode === 13) {
       this.sendTextMessage();
     }
