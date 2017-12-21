@@ -1,31 +1,27 @@
 import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { IonicPageModule } from 'ionic-angular';
-
-import { MessagesPage } from "./messages";
-import { MomentModule } from "angular2-moment";
-
+import { NewLocationMessageComponent } from "./location-message";
 import { Geolocation } from '@ionic-native/geolocation';
 import { AgmCoreModule } from "@agm/core";
 
 @NgModule({
   declarations: [
-    MessagesPage,
+    NewLocationMessageComponent
   ],
   imports: [
-    IonicPageModule.forChild(MessagesPage),
+    IonicPageModule.forChild(NewLocationMessageComponent),
     TranslateModule.forChild(),
-    MomentModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyAWoBdZHCNh5R-hB5S5ZZ2oeoYyfdDgniA'
     })
   ],
   exports: [
-    MessagesPage
+    NewLocationMessageComponent
   ],
   providers:[
     Geolocation
   ]
 })
-export class MessagePageModule {
+export class NewLocationMessageComponentModule {
 }

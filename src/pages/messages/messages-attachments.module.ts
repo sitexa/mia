@@ -1,20 +1,19 @@
 import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { IonicPageModule } from 'ionic-angular';
-
-import { MessagesOptionsComponent } from "./messages-options";
+import { MessagesAttachmentsComponent } from "./messages-attachments";
 
 @NgModule({
   declarations: [
-    MessagesOptionsComponent
+    MessagesAttachmentsComponent
   ],
   imports: [
-    IonicPageModule.forChild(MessagesOptionsComponent),
+    IonicPageModule.forChild(MessagesAttachmentsComponent),
     TranslateModule.forChild()
   ],
   exports: [
-    MessagesOptionsComponent
+    MessagesAttachmentsComponent
   ]
 })
-export class MessagesOptionsComponentModule {
+export class MessagesAttachmentsComponentModule {
 }

@@ -1,7 +1,8 @@
 export const DEFAULT_PICTURE_URL = '/assets/default-profile-pic.svg';
 
 export enum MessageType {
-  TEXT = <any>'text'
+  TEXT = <any>'text',
+  LOCATION = <any>'location'
 }
 
 export interface Profile {
@@ -29,4 +30,10 @@ export interface Message {
 
 export interface User extends Meteor.User {
   profile?: Profile;
+}
+
+export interface Location {
+  lat: number;
+  lng: number;
+  zoom: number;
 }

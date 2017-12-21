@@ -22,7 +22,7 @@ Meteor.methods({
     }
 
     const chatExists = !!Chats.collection.find({
-      memberIds: { $all: [this.userId, receiverId] }
+      memberIds: {$all: [this.userId, receiverId]}
     }).count();
 
     if (chatExists) {
@@ -66,7 +66,10 @@ Meteor.methods({
     });
   },
   addMessage(type: MessageType, chatId: string, content: string) {
-    check(type, Match.OneOf(String, [MessageType.TEXT]));
+    if (!this.userId) throw new Meteor.Error('unauthorized',
+      'User must be logged-in to create a new chat');
+
+    check(type, Match.OneOf(String, [MessageType.TEXT, MessageType.LOCATION]));
     check(chatId, nonEmptyString);
     check(content, nonEmptyString);
 

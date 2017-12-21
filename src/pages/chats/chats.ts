@@ -93,8 +93,8 @@ export class ChatsPage implements OnInit {
   //todo 为什么在options中打开editProfile之后，showMessages就打不开了呢？
   //todo 为什么editProfile窗体能覆盖tab位，而MessagesPage窗体在用navCtrl.push()的时候不能覆盖tab位？
   showMessages(chat): void {
-    //this.appCtrl.getRootNavs()[0].push('MessagesPage', {chat: chat});
-    this.navCtrl.push('MessagesPage', {chat: chat});
+    this.appCtrl.getRootNavs()[0].push('MessagesPage', {chat: chat});
+    //this.navCtrl.push('MessagesPage', {chat: chat});
   }
 
   removeChat(chat: Chat): void {
