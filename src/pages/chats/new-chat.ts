@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Chats, Users } from 'api/collections';
-import { User } from 'api/models';
-import { AlertController, IonicPage, ViewController } from 'ionic-angular';
+import { Chats, Pictures, Users } from 'api/collections';
+import { AlertController, IonicPage, Platform, ViewController } from 'ionic-angular';
 import { MeteorObservable } from 'meteor-rxjs';
 import * as _ from 'lodash';
-import { Observable, Subscription,BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 @IonicPage()
 @Component({
@@ -14,13 +13,12 @@ import { Observable, Subscription,BehaviorSubject } from 'rxjs';
 export class NewChatComponent implements OnInit {
   searchPattern: BehaviorSubject<any>;
   senderId: string;
-  users:any;
+  users: any;
   usersSubscription: Subscription;
 
-  constructor(
-    private alertCtrl: AlertController,
-    private viewCtrl: ViewController
-  ) {
+  constructor(private alertCtrl: AlertController,
+              private viewCtrl: ViewController,
+              private platform: Platform) {
     this.senderId = Meteor.userId();
     this.searchPattern = new BehaviorSubject(undefined);
   }
@@ -69,7 +67,7 @@ export class NewChatComponent implements OnInit {
     });
   }
 
-  findUsers():any {
+  findUsers(): any {
     // Find all belonging chats
     return Chats.find({
       memberIds: this.senderId
@@ -90,7 +88,7 @@ export class NewChatComponent implements OnInit {
 
         // Find all users which are not in belonging chats
         return Users.find({
-          _id: { $nin: receiverIds }
+          _id: {$nin: receiverIds}
         })
         // Invoke map with an empty array in case no user found
           .startWith([]);
@@ -107,5 +105,13 @@ export class NewChatComponent implements OnInit {
     });
 
     alert.present();
+  }
+
+  getPic(pictureId): string {
+    let platform = this.platform.is('android') ? "android" :
+      this.platform.is('ios') ? "ios" : "";
+    platform = this.platform.is('cordova') ? platform : "";
+
+    return Pictures.getPictureUrl(pictureId, platform);
   }
 }

@@ -1,5 +1,5 @@
-import { Chat, Message, User } from './models';
-import { Chats, Messages, Users } from './collections';
+import { Chat, Message, Picture, User } from './models';
+import { Chats, Messages, Pictures, Users } from './collections';
 import { publishComposite } from 'meteor/reywood:publish-composite';
 
 publishComposite('users',
@@ -22,7 +22,16 @@ publishComposite('users',
           fields: {profile: 1},
           limit: 15
         });
-      }
+      },
+      children: [
+        <PublishCompositeConfig1<User, Picture>> {
+          find: (user) => {
+            return Pictures.collection.find(user.profile.pictureId, {
+              fields: {url: 1}
+            });
+          }
+        }
+      ]
     };
   });
 
@@ -66,8 +75,29 @@ publishComposite('chats', function (): PublishCompositeConfig<Chat> {
           }, {
             fields: {profile: 1}
           });
-        }
+        },
+        children: [
+          <PublishCompositeConfig2<Chat, User, Picture>> {
+            find: (user, chat) => {
+              return Pictures.collection.find(user.profile.pictureId, {
+                fields: { url: 1 }
+              });
+            }
+          }
+        ]
       }
     ]
   };
+});
+
+Meteor.publish('user', function () {
+  if (!this.userId) {
+    return;
+  }
+
+  const profile = Users.findOne(this.userId).profile || {};
+
+  return Pictures.collection.find({
+    _id: profile.pictureId
+  });
 });

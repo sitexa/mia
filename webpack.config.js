@@ -31,7 +31,7 @@ var optimizedProdLoaders = [
         options: {
           sourceMap: true
         }
-      },
+      }
     ]
   },
   {
@@ -83,6 +83,9 @@ var devConfig = {
 
   //add to load external TypeScript modules(xnpeng)
   externals: [
+    {
+      sharp: '{}'
+    },
     resolveExternals
   ],
 
@@ -140,6 +143,9 @@ var prodConfig = {
 
   //add (xnpeng)
   externals: [
+    {
+      sharp: '{}'
+    },
     resolveExternals
   ],
 

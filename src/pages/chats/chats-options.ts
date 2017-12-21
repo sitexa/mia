@@ -1,8 +1,6 @@
 import { Component, Injectable } from '@angular/core';
 import { Alert, AlertController, IonicPage, NavController, ViewController } from 'ionic-angular';
 import { PhoneService } from '../../providers/providers';
-import { LoginPage } from '../login/login';
-import { ProfilePage } from '../profile/profile';
 
 @IonicPage()
 @Component({

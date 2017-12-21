@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { AlertController, IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { MeteorObservable } from 'meteor-rxjs';
-import { ChatsPage } from '../chats/chats';
 import { MainPage } from "../pages";
 
 @IonicPage()

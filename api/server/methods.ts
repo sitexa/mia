@@ -58,7 +58,8 @@ Meteor.methods({
       'User must be logged-in to create a new chat');
 
     check(profile, {
-      name: nonEmptyString
+      name: nonEmptyString,
+      pictureId: Match.Maybe(nonEmptyString)
     });
 
     Meteor.users.update(this.userId, {
