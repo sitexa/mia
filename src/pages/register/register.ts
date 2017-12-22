@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterContentInit, Component } from '@angular/core';
 import { Alert, AlertController, IonicPage, NavController } from 'ionic-angular';
 import { PhoneService } from '../../providers/providers';
 
@@ -7,12 +7,18 @@ import { PhoneService } from '../../providers/providers';
   selector: 'register',
   templateUrl: 'register.html'
 })
-export class RegisterPage {
+export class RegisterPage implements AfterContentInit{
   private phone = '';
 
   constructor(private alertCtrl: AlertController,
               private phoneService: PhoneService,
               private navCtrl: NavController) {
+  }
+
+  ngAfterContentInit() {
+    this.phoneService.getNumber()
+      .then((phone) => this.phone = phone)
+      .catch((e) => console.error(e.message));
   }
 
   onInputKeypress({keyCode}: KeyboardEvent): void {
