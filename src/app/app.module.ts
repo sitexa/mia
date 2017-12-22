@@ -19,6 +19,8 @@ import { PictureService } from "../providers/picture/picture";
 import { ImagePicker } from "@ionic-native/image-picker";
 import { Sim } from '@ionic-native/sim';
 import { SmsReceiver } from "../ionic/sms-receiver";
+import { Crop } from '@ionic-native/crop';
+
 
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
@@ -74,6 +76,7 @@ export function provideSettings(storage: Storage) {
     PictureService,
     Sim,
     SmsReceiver,
+    Crop,
     { provide: Settings, useFactory: provideSettings, deps: [Storage] },
     // Keep this to enable Ionic's runtime error handling during development
     { provide: ErrorHandler, useClass: IonicErrorHandler }

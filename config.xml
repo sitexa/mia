@@ -84,12 +84,12 @@
     <plugin name="cordova-plugin-splashscreen" spec="^4.0.3" />
     <plugin name="cordova-plugin-ionic-webview" spec="^1.1.16" />
     <plugin name="cordova-plugin-geolocation" spec="^3.0.0" />
-    <plugin name="com.synconset.imagepicker">
-        <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value=" " />
-    </plugin>
     <plugin name="cordova-plugin-sim" spec="^1.3.3" />
     <plugin name="cordova-plugin-sms-receiver" spec="^0.1.6" />
-    <plugin name="ImagePicker" spec="git+https://github.com/dhavalsoni2001/ImagePicker.git">
+    <plugin name="cordova-plugin-camera" spec="^4.0.0"/>
+    <plugin name="cordova-plugin-crop" spec="^0.4.0" />
+    <plugin name="com.synconset.imagepicker" spec="git+https://github.com/dhavalsoni2001/ImagePicker.git">
         <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value=" " />
     </plugin>
+    <plugin name="cordova-plugin-statusbar" spec="^2.4.0" />
 </widget>
