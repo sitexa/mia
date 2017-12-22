@@ -44,4 +44,8 @@ export class LoginPage {
 
     alert.present();
   }
+
+  goRegister():void{
+    this.navCtrl.push('RegisterPage',{});
+  }
 }

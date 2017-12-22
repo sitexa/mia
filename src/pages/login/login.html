@@ -20,9 +20,19 @@
   </div>
 
   <ion-item>
-    <ion-input [(ngModel)]="phone" (keypress)="onInputKeypress($event)" type="tel" placeholder="Your phone number"></ion-input>
+    <ion-input [(ngModel)]="phone" (keypress)="onInputKeypress($event)" type="tel"
+               placeholder="Your phone number"></ion-input>
   </ion-item>
   <ion-item>
-    <ion-input [(ngModel)]="password" (keypress)="onInputKeypress($event)" type="password" placeholder="Your password"></ion-input>
+    <ion-input [(ngModel)]="password" (keypress)="onInputKeypress($event)" type="password"
+               placeholder="Your password"></ion-input>
   </ion-item>
+  <ion-list>
+    <ion-item>
+      <ion-label (click)="goRegister()">Forget Password</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label (click)="goRegister()">Register User</ion-label>
+    </ion-item>
+  </ion-list>
 </ion-content>
