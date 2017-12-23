@@ -21,8 +21,10 @@ export class MessagesAttachmentsComponent {
       return console.warn('Device must run cordova in order to take pictures');
     }
 
-    this.pictureService.getPicture(camera, false)
+    //todo step1:getPicture
+    this.pictureService.getPicture(camera, true)
       .then((blob: File) => {
+        console.log("step1 selected or taken by camera file:"+blob.name);
         this.viewCtrl.dismiss({
           messageType: MessageType.PICTURE,
           selectedPicture: blob
