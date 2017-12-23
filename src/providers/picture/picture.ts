@@ -14,40 +14,9 @@ export class PictureService {
               private crop: Crop) {
   }
 
-  getPicture(camera: boolean, crop: boolean): Promise<File> {
-    if (!this.platform.is('cordova')) {
-      return new Promise((resolve, reject) => {
-        //TODO: add javascript image crop
-        if (camera === true) {
-          reject(new Error("Can't access the camera on Browser"));
-        } else {
-          try {
-            UploadFS.selectFile((file: File) => {
-              resolve(file);
-            });
-          } catch (e) {
-            reject(e);
-          }
-        }
-      });
-    }
-
-    return this.camera.getPicture(<CameraOptions>{
-      destinationType: 1,
-      quality: 50,
-      correctOrientation: true,
-      saveToPhotoAlbum: false,
-      sourceType: camera ? 1 : 0
-    })
-      .then((fileURI) => {
-        return crop ? this.crop.crop(fileURI, {quality: 50}) : fileURI;
-      })
-      .then((croppedFileURI) => {
-        return this.convertURLtoBlob(croppedFileURI);
-      });
-  }
-
+  //todo check and debug here
   upload(blob: File): Promise<any> {
+    console.log("step5:upload blob:" + blob.name);
     return new Promise((resolve, reject) => {
       const metadata: any = _.pick(blob, 'name', 'type', 'size');
 
@@ -67,30 +36,84 @@ export class PictureService {
     });
   }
 
+
+  getPicture(camera: boolean, crop: boolean): Promise<File> {
+    if (!this.platform.is('cordova')) {
+      return new Promise((resolve, reject) => {
+        //TODO: add javascript image crop
+        if (camera === true) {
+          reject(new Error("Can't access the camera on Browser"));
+        } else {
+          try {
+            console.log("step2:browser:getPicture");
+            UploadFS.selectFile((file: File) => {
+              console.log("step2:browser:getPicture:UploadFS:selectFile:" + file.name);
+              resolve(file);
+            });
+          } catch (e) {
+            reject(e);
+          }
+        }
+      });
+    }
+
+    //todo: step2,take picture by camera
+    return this.camera.getPicture(<CameraOptions>{
+      destinationType: 1,//image file URI
+      quality: 50,
+      correctOrientation: true,
+      saveToPhotoAlbum: true,
+      sourceType: camera ? 1 : 0, //from camera
+      mediaType: 2 //picture and video
+    })
+      .then((fileURI) => {
+        console.log("step2:camera:fileURI:" + fileURI);
+        return crop ? this.crop.crop(fileURI, {quality: 50}) : fileURI;
+      })
+      .then((croppedFileURI) => {
+        console.log("step2:camera:croppedFileURI:" + croppedFileURI);
+        return this.convertURLtoBlob(croppedFileURI);
+      });
+  }
+
   convertURLtoBlob(url: string, options = {}): Promise<File> {
+    console.log("step2:converURLtoBlob:url=" + url);
     return new Promise((resolve, reject) => {
-      const image = document.createElement('img');
 
-      image.onload = () => {
-        try {
-          const dataURI = this.convertImageToDataURI(image, options);
-          const blob = this.convertDataURIToBlob(dataURI);
-          const pathname = (new URL(url)).pathname;
-          const filename = pathname.substring(pathname.lastIndexOf('/') + 1);
-          const file = new File([blob], filename);
+      try {
+        console.log("step2:converURLtoBlob:Promise:try:");
+        const image = document.createElement('img');
 
-          resolve(file);
-        }
-        catch (e) {
-          reject(e);
-        }
-      };
+        image.onload = () => {
+          try {
+            console.log("step2:converURLtoBlob:image.onload:");
+            const dataURI = this.convertImageToDataURI(image, options);
+            console.log("step2:converURLtoBlob:dataURI:" + dataURI);
+            const blob = this.convertDataURIToBlob(dataURI);
+            const pathname = (new URL(url)).pathname;
+            const filename = pathname.substring(pathname.lastIndexOf('/') + 1);
+            console.log("step2 pathname:" + pathname);
+            console.log("step2 filename:" + filename);
+            const file = new File([blob], filename);
+            console.log("step2:converURLtoBlob:file:" + file.name);
+            resolve(file);
+          }
+          catch (e) {
+            console.log("step2:converURLtoBlob:error:" + e.toString());
+            reject(e);
+          }
+        };
 
-      image.src = url;
+        image.src = url;
+
+      } catch (e) {
+        console.log("step2:converURLtoBlob:Promise:catch:" + e.toString());
+      }
     });
   }
 
   convertImageToDataURI(image: HTMLImageElement, {MAX_WIDTH = 400, MAX_HEIGHT = 400} = {}): string {
+    console.log("step2:convertImageToDataURI:");
     // Create an empty canvas element
     const canvas = document.createElement('canvas');
 
@@ -120,7 +143,7 @@ export class PictureService {
     // guess the original format, but be aware the using 'image/jpg'
     // will re-encode the image.
     const dataURL = canvas.toDataURL('image/png');
-
+    console.log("step2:convertImageToDataURI:dataURL:" + dataURL);
     return dataURL.replace(/^data:image\/(png|jpg);base64,/, '');
   }
 
