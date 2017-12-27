@@ -9,5 +9,10 @@
     "FROM":"+12055881999",
     "ACCOUNT_SID":"AC51091ac1b10fee06bef4f46cf2a990c8",
     "AUTH_TOKEN":"4acdd30b1847f6c00d819c5251bc4bae"
+  },
+  "private": {
+    "fcm": {
+      "key": "AIzaSyAbb4oYpk13PNJPYSMziU650ixkiAFrGuk"
+    }
   }
 }

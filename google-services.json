@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "719179097702",
+    "firebase_url": "https://com-sitexa-push.firebaseio.com",
+    "project_id": "com-sitexa-push",
+    "storage_bucket": "com-sitexa-push.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:719179097702:android:7306431e94a2fcb8",
+        "android_client_info": {
+          "package_name": "com.sitexa.mia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "719179097702-9qfu7gof9o4p5n9hcp6bs45brai01o4a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbb4oYpk13PNJPYSMziU650ixkiAFrGuk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -21,6 +21,7 @@ import { Sim } from '@ionic-native/sim';
 import { SmsReceiver } from "../ionic/sms-receiver";
 import { Crop } from '@ionic-native/crop';
 import { Contacts } from "@ionic-native/contacts";
+import { FCM } from "@ionic-native/fcm";
 
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
@@ -78,6 +79,7 @@ export function provideSettings(storage: Storage) {
     SmsReceiver,
     Crop,
     Contacts,
+    FCM,
     { provide: Settings, useFactory: provideSettings, deps: [Storage] },
     // Keep this to enable Ionic's runtime error handling during development
     { provide: ErrorHandler, useClass: IonicErrorHandler }

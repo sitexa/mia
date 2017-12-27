@@ -5,6 +5,7 @@ import { Chats, Messages, Pictures, Users } from "api/collections";
 import { Chat, Message } from "api/models";
 import { Subscriber } from "rxjs/Subscriber";
 import { MeteorObservable } from "meteor-rxjs";
+import { FCM } from "@ionic-native/fcm";
 
 @IonicPage()
 @Component({
@@ -18,7 +19,8 @@ export class ChatsPage implements OnInit {
               private popoverCtrl: PopoverController,
               private modalCtrl: ModalController,
               private alertCtrl: AlertController,
-              private platform: Platform) {
+              private platform: Platform,
+              private fcm: FCM) {
     this.senderId = Meteor.userId();
   }
 
@@ -33,6 +35,35 @@ export class ChatsPage implements OnInit {
         this.chats = this.findChats();
       });
     });
+
+    // Notifications
+    if (this.platform.is('cordova')) {
+      //this.fcm.subscribeToTopic('news');
+
+      this.fcm.getToken().then(token => {
+        console.log("Registering FCM token on backend");
+        MeteorObservable.call('saveFcmToken', token).subscribe({
+          next: () => console.log("FCM Token saved"),
+          error: err => console.error('Impossible to save FCM token: ', err)
+        });
+      });
+
+      this.fcm.onNotification().subscribe(data => {
+        if (data.wasTapped) {
+          console.log("Received FCM notification in background");
+        } else {
+          console.log("Received FCM notification in foreground");
+        }
+      });
+
+      this.fcm.onTokenRefresh().subscribe(token => {
+        console.log("Updating FCM token on backend");
+        MeteorObservable.call('saveFcmToken', token).subscribe({
+          next: () => console.log("FCM Token updated"),
+          error: err => console.error('Impossible to update FCM token: ' + err)
+        });
+      });
+    }
   }
 
   findChats(): any {

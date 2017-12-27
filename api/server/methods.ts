@@ -1,6 +1,7 @@
-import { Chats, Messages } from './collections';
+import { Chats, Messages,Users } from './collections';
 import { MessageType, Profile } from './models';
 import { check, Match } from 'meteor/check';
+import { fcmService } from "./services/fcm";
 
 const nonEmptyString = Match.Where((str) => {
   check(str, String);
@@ -83,6 +84,22 @@ Meteor.methods({
         'Chat doesn\'t exist');
     }
 
+    const userId = this.userId;
+    const senderName = Users.collection.findOne({_id: userId}).profile.name;
+    const memberIds = Chats.collection.findOne({_id: chatId}).memberIds;
+    const tokens: string[] = Users.collection.find(
+      {
+        _id: {$in: memberIds, $nin: [userId]},
+        fcmToken: {$exists: true}
+      }
+    ).map((el) => el.fcmToken);
+
+    for (let token of tokens) {
+      console.log("Sending FCM notification");
+      fcmService.sendNotification({"title": `New message from ${senderName}`, "text": content}, token);
+    }
+
+
     return {
       messageId: Messages.collection.insert({
         chatId: chatId,
@@ -95,5 +112,12 @@ Meteor.methods({
   },
   countMessages(): number {
     return Messages.collection.find().count();
+  },
+  saveFcmToken(token: string): void {
+    if (!this.userId) throw new Meteor.Error('unauthorized', 'User must be logged-in to call this method');
+
+    check(token, nonEmptyString);
+
+    Users.collection.update({_id: this.userId}, {$set: {"fcmToken": token}});
   }
 });

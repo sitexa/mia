@@ -28,6 +28,7 @@
     "@ionic-native/contacts": "^4.5.2",
     "@ionic-native/core": "4.4.0",
     "@ionic-native/crop": "^4.5.2",
+    "@ionic-native/fcm": "^4.5.2",
     "@ionic-native/file": "^4.5.2",
     "@ionic-native/geolocation": "^4.5.2",
     "@ionic-native/image-picker": "^4.5.2",
@@ -48,6 +49,7 @@
     "cordova-plugin-contacts": "^3.0.1",
     "cordova-plugin-crop": "^0.4.0",
     "cordova-plugin-device": "^1.1.4",
+    "cordova-plugin-fcm": "^2.1.2",
     "cordova-plugin-file": "^5.0.0",
     "cordova-plugin-geolocation": "^3.0.0",
     "cordova-plugin-ionic-webview": "^1.1.16",
@@ -63,6 +65,7 @@
     "meteor-node-stubs": "^0.3.2",
     "meteor-rxjs": "^0.4.8",
     "moment": "^2.19.2",
+    "node-fetch": "^1.7.3",
     "rxjs": "5.5.2",
     "sharp": "^0.18.4",
     "sw-toolbox": "3.6.0",
@@ -76,6 +79,7 @@
     "@types/meteor-accounts-phone": "0.0.5",
     "@types/meteor-collection-hooks": "^0.8.3",
     "@types/meteor-publish-composite": "0.0.33",
+    "@types/node-fetch": "^1.6.7",
     "tmp": "0.0.33",
     "typescript": "2.4.2",
     "typescript-extends": "^1.0.1"
@@ -100,7 +104,8 @@
         "PHOTO_LIBRARY_USAGE_DESCRIPTION": "read and share photo "
       },
       "cordova-plugin-file": {},
-      "cordova-plugin-contacts": {}
+      "cordova-plugin-contacts": {},
+      "cordova-plugin-fcm": {}
     },
     "platforms": [
       "android",
