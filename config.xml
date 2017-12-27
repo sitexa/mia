@@ -92,4 +92,6 @@
         <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="read and share photo " />
     </plugin>
     <plugin name="cordova-plugin-file" spec="^5.0.0" />
+    <plugin name="cordova-plugin-contacts" spec="^3.0.1" />
+    <allow-navigation href="http://192.168.2.104:8100" />
 </widget>

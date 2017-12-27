@@ -3,7 +3,7 @@ import { Chats, Messages, Pictures, Users } from './collections';
 import { publishComposite } from 'meteor/reywood:publish-composite';
 
 publishComposite('users',
-  function (pattern: string): PublishCompositeConfig<User> {
+  function (pattern: string, contacts: string[]): PublishCompositeConfig<User> {
     if (!this.userId) {
       return;
     }
@@ -12,8 +12,19 @@ publishComposite('users',
 
     if (pattern) {
       selector = {
-        'profile.name': {$regex: pattern, $options: 'i'}
+        'profile.name': {$regex: pattern, $options: 'i'},
+        $or: [
+          {'phone.number': {$in: contacts}},
+          {'profile.name': {$in: ['Ethan Gonzalez', 'Bryan Wallace', 'Avery Stewart', 'Katie Peterson', 'Ray Edwards']}}
+        ]
       };
+    } else {
+      selector = {
+        $or: [
+          {'phone.number': {$in: contacts}},
+          {'profile.name': {$in: ['Ethan Gonzalez', 'Bryan Wallace', 'Avery Stewart', 'Katie Peterson', 'Ray Edwards']}}
+        ]
+      }
     }
 
     return {
@@ -80,7 +91,7 @@ publishComposite('chats', function (): PublishCompositeConfig<Chat> {
           <PublishCompositeConfig2<Chat, User, Picture>> {
             find: (user, chat) => {
               return Pictures.collection.find(user.profile.pictureId, {
-                fields: { url: 1 }
+                fields: {url: 1}
               });
             }
           }

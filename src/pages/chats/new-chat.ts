@@ -4,6 +4,7 @@ import { AlertController, IonicPage, Platform, ViewController } from 'ionic-angu
 import { MeteorObservable } from 'meteor-rxjs';
 import * as _ from 'lodash';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { PhoneService } from "../../providers/phone/phone";
 
 @IonicPage()
 @Component({
@@ -15,16 +16,26 @@ export class NewChatComponent implements OnInit {
   senderId: string;
   users: any;
   usersSubscription: Subscription;
+  contacts: string[] = [];
+  contactsPromise: Promise<void>;
 
   constructor(private alertCtrl: AlertController,
               private viewCtrl: ViewController,
-              private platform: Platform) {
+              private platform: Platform,
+              private phoneService: PhoneService) {
     this.senderId = Meteor.userId();
     this.searchPattern = new BehaviorSubject(undefined);
   }
 
   ngOnInit() {
     this.observeSearchBar();
+    this.contactsPromise = this.phoneService.getContactsFromAddressbook()
+      .then((phoneNumbers: string[]) => {
+        this.contacts = phoneNumbers;
+      })
+      .catch((e: Error) => {
+        console.error(e.message);
+      });
   }
 
   updateSubscription(newValue) {
@@ -40,7 +51,9 @@ export class NewChatComponent implements OnInit {
           this.usersSubscription.unsubscribe();
         }
 
-        this.usersSubscription = this.subscribeUsers();
+        this.contactsPromise.then(() => {
+          this.usersSubscription = this.subscribeUsers();
+        });
       });
   }
 
@@ -59,7 +72,7 @@ export class NewChatComponent implements OnInit {
 
   subscribeUsers(): Subscription {
     // Fetch all users matching search pattern
-    const subscription = MeteorObservable.subscribe('users', this.searchPattern.getValue());
+    const subscription = MeteorObservable.subscribe('users', this.searchPattern.getValue(), this.contacts);
     const autorun = MeteorObservable.autorun();
 
     return Observable.merge(subscription, autorun).subscribe(() => {

@@ -7,9 +7,6 @@ import { MeteorObservable } from "meteor-rxjs";
 
 Meteor.startup(() => {
   const subscription = MeteorObservable.autorun().subscribe(() => {
-
-    console.log("Meteor.loggingIn:" + Meteor.loggingIn());
-
     if (Meteor.loggingIn()) {
       return;
     }
