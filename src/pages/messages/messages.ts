@@ -239,6 +239,7 @@ export class MessagesPage implements OnInit, OnDestroy {
         }
         else if (params.messageType === MessageType.PICTURE) {
           const blob: File = params.selectedPicture;
+          console.log("step3:blob:="+blob.name);
           this.sendPictureMessage(blob);
         }
       }
@@ -249,6 +250,7 @@ export class MessagesPage implements OnInit, OnDestroy {
 
   sendPictureMessage(blob: File): void {
     this.pictureService.upload(blob).then((picture) => {
+      console.log("step6:finished upload:"+picture.url);
       MeteorObservable.call('addMessage', MessageType.PICTURE,
         this.selectedChat._id,
         picture.url

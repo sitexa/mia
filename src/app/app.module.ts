@@ -21,7 +21,6 @@ import { Sim } from '@ionic-native/sim';
 import { SmsReceiver } from "../ionic/sms-receiver";
 import { Crop } from '@ionic-native/crop';
 
-
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
 export function createTranslateLoader(http: HttpClient) {

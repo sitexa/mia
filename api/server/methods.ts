@@ -67,6 +67,8 @@ Meteor.methods({
     });
   },
   addMessage(type: MessageType, chatId: string, content: string) {
+    console.log("addMessage at server,type:" + type.toString());
+    console.log("addMessage at server,content:" + content);
     if (!this.userId) throw new Meteor.Error('unauthorized',
       'User must be logged-in to create a new chat');
 
