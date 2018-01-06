@@ -136,8 +136,6 @@ export class MessagesPage implements OnInit, OnDestroy {
   }
 
   findMessagesDayGroups() {
-    let isEven = false;
-
     return Messages.find({
       chatId: this.selectedChat._id
     }, {
@@ -148,8 +146,7 @@ export class MessagesPage implements OnInit, OnDestroy {
 
         // Compose missing data that we would like to show in the view
         messages.forEach((message) => {
-          message.ownership = isEven ? 'mine' : 'other';
-          isEven = !isEven;
+          message.ownership = this.senderId == message.senderId ? 'mine' : 'other';
 
           return message;
         });
