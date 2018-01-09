@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "build:api": "cd api && meteor build .deploy --architecture os.linux.x86_64 --server-only",
-    "api": "cd api && export ROOT_URL=http://192.168.2.104:3000 && meteor run --settings server/private/settings.json --raw-logs",
+    "api": "cd api && export ROOT_URL=http://127.0.0.1:3000 && meteor run --settings server/private/settings.json --raw-logs",
     "api:reset": "cd api && meteor reset",
     "clean": "ionic-app-scripts clean",
     "build": "ionic-app-scripts build",
