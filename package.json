@@ -5,7 +5,7 @@
   "homepage": "http://www.sitexa.com/",
   "private": true,
   "scripts": {
-    "build:api":"cd api && meteor build .deploy --architecture os.linux.x86_64 --server-only",
+    "build:api": "cd api && meteor build .deploy --architecture os.linux.x86_64 --server-only",
     "api": "cd api && export ROOT_URL=http://192.168.2.104:3000 && meteor run --settings server/private/settings.json --raw-logs",
     "api:reset": "cd api && meteor reset",
     "clean": "ionic-app-scripts clean",
@@ -13,7 +13,8 @@
     "lint": "ionic-app-scripts lint",
     "ionic:build": "ionic-app-scripts build",
     "ionic:serve": "ionic-app-scripts serve",
-    "meteor-client:bundle": "meteor-client bundle -s api -c meteor-client.config.json"
+    "meteor-client:bundle": "meteor-client bundle -s api",
+    "meteor-client:production": "meteor-client bundle -s api -c meteor-client.config.json"
   },
   "dependencies": {
     "@agm/core": "^1.0.0-beta.2",
