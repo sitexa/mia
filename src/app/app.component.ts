@@ -11,22 +11,22 @@ import { Settings } from '../providers/providers';
   templateUrl: "app.html"
 })
 export class MyApp {
-  rootPage:any;
+  rootPage: any;
 
   @ViewChild(Nav) nav: Nav;
 
   pages: any[] = [
-    { title: 'Tutorial', component: 'TutorialPage' },
-    { title: 'Welcome', component: 'WelcomePage' },
-    { title: 'Tabs', component: 'TabsPage' },
-    { title: 'Cards', component: 'CardsPage' },
-    { title: 'Content', component: 'ContentPage' },
-    { title: 'Signin', component: 'SigninPage' },
-    { title: 'Signup', component: 'SignupPage' },
-    { title: 'Master Detail', component: 'ListMasterPage' },
-    { title: 'Menu', component: 'MenuPage' },
-    { title: 'Settings', component: 'SettingsPage' },
-    { title: 'Search', component: 'SearchPage' },
+    {title: 'Tutorial', component: 'TutorialPage'},
+    {title: 'Welcome', component: 'WelcomePage'},
+    {title: 'Tabs', component: 'TabsPage'},
+    {title: 'Cards', component: 'CardsPage'},
+    {title: 'Content', component: 'ContentPage'},
+    {title: 'Signin', component: 'SigninPage'},
+    {title: 'Signup', component: 'SignupPage'},
+    {title: 'Master Detail', component: 'ListMasterPage'},
+    {title: 'Menu', component: 'MenuPage'},
+    {title: 'Settings', component: 'SettingsPage'},
+    {title: 'Search', component: 'SearchPage'},
     {title: 'Messages', component: 'MessagesPage'}
   ];
 
@@ -40,9 +40,26 @@ export class MyApp {
       this.rootPage = Meteor.user() ? MainPage : FirstRunPage;
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
-      if (platform.is('cordova')) {
-        statusBar.styleDefault();
-        splashScreen.hide();
+      statusBar.styleDefault();
+      splashScreen.hide();
+      //keyboard.hideFormAccessoryBar(false);
+
+      if (platform.is('ios')) {
+        let
+          appEl = <HTMLElement>(document.getElementsByTagName('ION-APP')[0]),
+          appElHeight = appEl.clientHeight;
+
+        //Keyboard.disableScroll(true);
+        //keyboard.hideFormAccessoryBar(true);
+
+        window.addEventListener('native.keyboardshow', (e) => {
+          //appEl.style.height = (appElHeight - (<any>e).keyboardHeight) + 'px';
+          appEl.style.height = (appElHeight-66) + 'px';
+        });
+
+        window.addEventListener('native.keyboardhide', () => {
+          appEl.style.height = '100%';
+        });
       }
     });
     this.initTranslate();
